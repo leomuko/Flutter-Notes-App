@@ -70,9 +70,20 @@ class _LoginViewState extends State<LoginView> {
                             var credentials = FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: email, password: password);
-                            print(credentials);
+                            FirebaseAuth.instance
+                                .authStateChanges()
+                                .listen((User? user) {
+                              if (user == null) {
+                                print("User not signed In");
+                              } else {
+                                print('User is signed in!');
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, "/home/", (_) => false);
+                              }
+                            });
+                            print("Credentials $credentials");
                           } on FirebaseAuthException catch (e) {
-                            print(e.message);
+                            print("Error ${e.message}");
                           }
                         },
                         child: const Text("Login")),
